@@ -1,5 +1,5 @@
 <?php
-include 'PHPRestLib/PHPRestLib.php';
+include 'PHPRestLib.php';
 include 'Middleware.php';
 include 'Names.php';
 
