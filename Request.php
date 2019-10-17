@@ -62,44 +62,29 @@ class Request {
 
 	private function setPath()
 	{
-		$file = explode('/',$_SERVER['SCRIPT_NAME']);
-		array_pop($file);
-		$path=explode('?',explode(implode('/',$file),$_SERVER['REQUEST_URI'])[1])[0];
-		$this->path=$path;
+		$this->path = explode('?', $_SERVER['REQUEST_URI'])[0];
 	}
 
 	private function setPathAndQuery()
 	{
-		$file = explode('/',$_SERVER['SCRIPT_NAME']);
-		array_pop($file);
-		$path=explode('?',explode(implode('/',$file),$_SERVER['REQUEST_URI'])[1]);
-		$this->path=$path[0];
-		$this->query=[];
-		if(isset($path[1])){
-			$path=explode('&',$path[1]);
-			foreach($path as $p) {
-				if($p=="") continue;
-				$split=explode('=',$p);
-				$this->query[$split[0]]=($split[1]?$split[1]:"");
-			}
-		}
+		$this->setPath();
+		$this->setQuery();
 	}
 
 	private function setQuery()
 	{
-		$file = explode('/',$_SERVER['SCRIPT_NAME']);
-		array_pop($file);
-		$path=explode('?',explode(implode('/',$file),$_SERVER['REQUEST_URI'])[1]);
-		$this->query=[];
-		if(isset($path[1])){
-			$path=explode('&',$path[1]);
+		if (strpos($_SERVER['REQUEST_URI'], '?') !== false) {
+			$path = explode('&', explode('?', $_SERVER['REQUEST_URI'])[1]);
+			$query = [];
 			foreach($path as $p) {
 				$split=explode('=',$p);
-				if(!isset($this->query[$split[0]])) $this->query[$split[0]]=($split[1]?$split[1]:"");
-				elseif(is_string($this->query[$split[0]])) $this->query[$split[0]]=[$this->query[$split[0]],($split[1]?$split[1]:"")];
-				elseif(is_array($this->query[$split[0]])) $this->query[$split[0]][]=($split[1]?$split[1]:"");
+				if (isset($query[$split[0]])) {
+					if(is_array($query[$split[0]])) $query[$split[0]][] = ($split[1] ? $split[1] : '');
+					else $query[$split[0]] = [$query[0], ($split[1] ? $split[1] : '')];
+				}
 			}
-		}
+			$this->query = $query;
+		} else $this->query = [];
 	}
 
 	private function setHeaders()
