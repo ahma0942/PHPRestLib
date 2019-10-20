@@ -107,6 +107,5 @@ class Request {
 				elseif(is_array($this->body[$split[0]])) $this->body[$split[0]][]=($split[1]?$split[1]:"");
 			}
 		}
-		print_r($this->body);
 	}
 }

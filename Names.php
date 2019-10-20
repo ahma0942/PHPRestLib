@@ -5,7 +5,6 @@ class Names {
     }
 
     public static function test(Request $request, $data){
-    	print_r($data);
         echo "TEST STATIC METHOD";
     }
 }
