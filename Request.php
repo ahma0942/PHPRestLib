@@ -80,8 +80,8 @@ class Request {
 				$split=explode('=',$p);
 				if (isset($query[$split[0]])) {
 					if(is_array($query[$split[0]])) $query[$split[0]][] = ($split[1] ? $split[1] : '');
-					else $query[$split[0]] = [$query[0], ($split[1] ? $split[1] : '')];
-				}
+					else $query[$split[0]] = [$query[$split[0]], ($split[1] ? $split[1] : '')];
+				} else $query[$split[0]] = ($split[1] ? $split[1] : '');
 			}
 			$this->query = $query;
 		} else $this->query = [];
