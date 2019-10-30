@@ -37,13 +37,15 @@ class PHPRestLib {
 	{
 		$data=[];
 		foreach($middlewares as $middleware) {
-			if(strpos($middleware,'.')!==false){
-				$m=explode('.',$middleware);
-				$mdat=$m[0]::{$m[1]}($this->request);
-			}
-			else $mdat=$middleware();
+			if(strpos($middleware,'.')!==false) list($class, $middleware)=explode('.',$middleware);
+			if(preg_match('/\((.*?)\)/', $middleware, $match) == 1) {
+				$params=$match[1]===''?[]:explode(',',$match[1]);
+				$middleware=explode('(',$middleware)[0];
+			} else $params=[];
+			if($class!==null) $mdat=$class::{$middleware}($this->request,$params);
+			else $mdat=$middleware($this->request,$params);
 
-			if($mdat===false) exit;
+			if(!is_array($mdat)) $mdat = [];
 			foreach($mdat as $name => $val) $data[$name]=$val;
 		}
 
