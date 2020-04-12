@@ -62,7 +62,9 @@ class Request {
 
 	private function setPath()
 	{
-		$this->path = explode('?', $_SERVER['REQUEST_URI'])[0];
+		$prefix = implode('/',explode('/',$_SERVER['SCRIPT_NAME'],-1));
+		if ($prefix != '') $this->path = str_replace($prefix, '', explode('?', $_SERVER['REQUEST_URI'])[0]);
+		else $this->path = explode('?', $_SERVER['REQUEST_URI'])[0];
 	}
 
 	private function setPathAndQuery()
